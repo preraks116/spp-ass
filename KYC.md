@@ -159,10 +159,12 @@ Solution Validates: avg error less than 1.000000e-13 on all three arrays
 Therefore, main memory bandwidth = 20.03 GB/s 
 ### 4. 
 
-My system has both HDD and SSD
+Secondary Storage Device: HDD
 
-- HDD size: 1 TB
-- SSD size: 512 GB
+- Size: 1 TB
+- Average Read Rate: 222.4 MB/s
+- Average Write Rate: 69.8 MB/s
+- Average Access Time: 4.04 ms
 
 # Know your Cluster
 
