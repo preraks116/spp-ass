@@ -1,3 +1,6 @@
 [submodule "STREAM"]
 	path = STREAM
 	url = git@github.com:jeffhammond/STREAM.git
+[submodule "Flops"]
+	path = Flops
+	url = git@github.com:Mysticial/Flops.git
