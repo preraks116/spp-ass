@@ -1,0 +1,132 @@
+Running Haswell tuned binary with 1 thread...
+
+Single-Precision - 128-bit AVX - Add/Sub
+    GFlops = 32.48
+    Result = 4.17115e+06
+
+Double-Precision - 128-bit AVX - Add/Sub
+    GFlops = 15.872
+    Result = 2.01418e+06
+
+Single-Precision - 128-bit AVX - Multiply
+    GFlops = 32.208
+    Result = 4.04626e+06
+
+Double-Precision - 128-bit AVX - Multiply
+    GFlops = 16.272
+    Result = 2.04448e+06
+
+Single-Precision - 128-bit AVX - Multiply + Add
+    GFlops = 32.112
+    Result = 3.45146e+06
+
+Double-Precision - 128-bit AVX - Multiply + Add
+    GFlops = 15.864
+    Result = 1.65856e+06
+
+Single-Precision - 128-bit FMA3 - Fused Multiply Add
+    GFlops = 63.744
+    Result = 4.01702e+06
+
+Double-Precision - 128-bit FMA3 - Fused Multiply Add
+    GFlops = 32.4
+    Result = 2.06966e+06
+
+Single-Precision - 256-bit AVX - Add/Sub
+    GFlops = 65.024
+    Result = 8.264e+06
+
+Double-Precision - 256-bit AVX - Add/Sub
+    GFlops = 32.544
+    Result = 4.16561e+06
+
+Single-Precision - 256-bit AVX - Multiply
+    GFlops = 64.704
+    Result = 8.14992e+06
+
+Double-Precision - 256-bit AVX - Multiply
+    GFlops = 32.208
+    Result = 4.10615e+06
+
+Single-Precision - 256-bit AVX - Multiply + Add
+    GFlops = 65.088
+    Result = 6.73771e+06
+
+Double-Precision - 256-bit AVX - Multiply + Add
+    GFlops = 32.544
+    Result = 3.40973e+06
+
+Single-Precision - 256-bit FMA3 - Fused Multiply Add
+    GFlops = 130.368
+    Result = 8.36024e+06
+
+Double-Precision - 256-bit FMA3 - Fused Multiply Add
+    GFlops = 65.088
+    Result = 4.19336e+06
+
+
+Running Haswell tuned binary with 8 thread(s)...
+
+Single-Precision - 128-bit AVX - Add/Sub
+    GFlops = 127.616
+    Result = 1.62603e+07
+
+Double-Precision - 128-bit AVX - Add/Sub
+    GFlops = 63.712
+    Result = 8.04256e+06
+
+Single-Precision - 128-bit AVX - Multiply
+    GFlops = 127.824
+    Result = 1.61526e+07
+
+Double-Precision - 128-bit AVX - Multiply
+    GFlops = 63.768
+    Result = 8.11919e+06
+
+Single-Precision - 128-bit AVX - Multiply + Add
+    GFlops = 127.44
+    Result = 1.35477e+07
+
+Double-Precision - 128-bit AVX - Multiply + Add
+    GFlops = 63.864
+    Result = 6.74699e+06
+
+Single-Precision - 128-bit FMA3 - Fused Multiply Add
+    GFlops = 255.744
+    Result = 1.62345e+07
+
+Double-Precision - 128-bit FMA3 - Fused Multiply Add
+    GFlops = 127.728
+    Result = 8.11339e+06
+
+Single-Precision - 256-bit AVX - Add/Sub
+    GFlops = 255.424
+    Result = 3.22698e+07
+
+Double-Precision - 256-bit AVX - Add/Sub
+    GFlops = 127.584
+    Result = 1.62405e+07
+
+Single-Precision - 256-bit AVX - Multiply
+    GFlops = 255.456
+    Result = 3.23136e+07
+
+Double-Precision - 256-bit AVX - Multiply
+    GFlops = 127.584
+    Result = 1.62026e+07
+
+Single-Precision - 256-bit AVX - Multiply + Add
+    GFlops = 255.552
+    Result = 2.71067e+07
+
+Double-Precision - 256-bit AVX - Multiply + Add
+    GFlops = 127.776
+    Result = 1.36367e+07
+
+Single-Precision - 256-bit FMA3 - Fused Multiply Add
+    GFlops = 510.912
+    Result = 3.24221e+07
+
+Double-Precision - 256-bit FMA3 - Fused Multiply Add
+    GFlops = 247.776
+    Result = 1.57569e+07

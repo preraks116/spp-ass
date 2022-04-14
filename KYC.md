@@ -72,6 +72,37 @@ The output is stored in `flops_benchmark_output.txt`
 
 To measure FLOPS we first need code that performs floating point operations, and measure its execution time 
 
+```c
+void func1(){
+    // perform floating point instructions
+    double x = 1.5;
+    double y = 2.5;
+    // total number of floating point instructions performed = 200000000
+    for (int i = 0; i < 100000000; i++) {
+        x = x + y;
+        y = x * y;
+    }
+}
+```
+Command
+```
+cd benchmark
+gcc benchmark.c -O1
+./a.out 
+```
+Output
+```
+----------------------------------------
+func1
+time: 0.509031 s
+----------------------------------------
+FLOPS: 3.929034 GFLOPS
+```
+
+As we can see, this benchmark is heavily unoptimized for the following reasons
+- there is kind of parralelism being used
+- This can be made efficient by using parallelization using OpenMP or vectorization.
+
 ### 3.
 <!-- 
 Reference for maximum memory bandwidth: https://codearcana.com/posts/2013/05/18/achieving-maximum-memory-bandwidth.html -->
