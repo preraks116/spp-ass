@@ -217,3 +217,39 @@ Secondary Storage Device: HDD
 
 - ADA Peak FLOPs: 70.66 TFLOPS
 - Abacus Peak FLOPs: 14 TFLOPS
+
+## BLAS Problems
+
+### BLAS Level 1
+
+#### Approach
+
+Command
+```
+cd blas-problems/q1
+make
+./q1
+```
+First method for writing LEVEL 1 functions is written in blas-problems/q1/q1.c
+
+Output
+```
+LEVEL 1
+Iterations: 100000000
+Alpha: 1.000000
+-------------------------------------------------------
+xSCAL:
+sscal time: 32.295000 ms
+dscal time: 63.656000 ms
+-------------------------------------------------------
+xDOT:
+dot: 0.000000
+sdot time: 87.315000 ms
+dot2: 0.000000
+ddot time: 175.900000 ms
+-------------------------------------------------------
+xAXPY:
+saxpy time: 152.641000 ms
+daxpy time: 308.531000 ms
+-------------------------------------------------------
+```

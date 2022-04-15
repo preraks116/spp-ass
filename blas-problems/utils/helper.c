@@ -17,10 +17,17 @@ double tock(struct timeval *t)
     ((double)(now.tv_usec - t->tv_usec)/1000000.);
 }
 
-void RandomVector(int n, float *A)
+void RandomVectorFloat(int n, float *A)
 {
     for(int i=0; i < n; ++i) {
         A[i] = (float) rand()/RAND_MAX;
+    }
+}
+
+void RandomVectorDouble(int n, double *A)
+{
+    for(int i=0; i < n; ++i) {
+        A[i] = (double) (rand()/RAND_MAX);
     }
 }
 
