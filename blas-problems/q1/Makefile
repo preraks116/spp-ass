@@ -1,7 +1,8 @@
 # indicate how the object files are to be created
-CC         := icc 
-#CFLAGS     := -g -O3 -axCORE-AVX2  -qopenmp
-CFLAGS     := -g -O3 -axCORE-AVX2
+# CC         := icc 
+CC 		   := gcc
+CFLAGS     := -g -O3 -lm
+# CFLAGS     := -g -O3 -axCORE-AVX2
 
 OBJECT_FILES := q1.o helper.o 
 q1: $(OBJECT_FILES)

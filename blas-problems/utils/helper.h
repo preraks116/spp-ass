@@ -1,3 +1,5 @@
+#include <sys/time.h>
+
 void tick(struct timeval *t);
 double tock(struct timeval *t);
 void RandomVectorFloat(int n, float *A);

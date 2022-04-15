@@ -114,7 +114,7 @@ Reference for maximum memory bandwidth: https://codearcana.com/posts/2013/05/18/
 
 Benchmarking using STREAM submodule
 
-Benchmarking using icc
+**Compler**: icc
 
 Command used
 ```
@@ -158,7 +158,7 @@ Triad:          31334.8     0.061489     0.061274     0.062979
 Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 ```
-Benchmarking using gcc 
+**Compiler**: gcc 
 
 Command used
 ```
@@ -223,33 +223,66 @@ Secondary Storage Device: HDD
 ### BLAS Level 1
 
 #### Approach
-
+#### BLAS
 Command
-```
+```shell
 cd blas-problems/q1
 make
-./q1
+./q1 1
+./q1 2
+./q1 3
+./q1 4
+./q1 
 ```
 First method for writing LEVEL 1 functions is written in blas-problems/q1/q1.c
 
+Output (The time given here is in ms)
+
+**Compiler**: icc
+
+**Flags**: `-g -O3 -axCORE-AVX2`
+
+| Vector Length |   sSCAL   |   dSCAL   |   sDOT    |    dDOT    |   sAXPY    |   dAXPY    |
+| :-----------: | :-------: | :-------: | :-------: | :--------: | :--------: | :--------: |
+|   20000000    | 5.869000  | 12.336000 | 18.123000 | 36.464000  | 30.512000  | 60.612000  |
+|   40000000    | 12.054000 | 27.428000 | 36.330000 | 70.216000  | 60.362000  | 120.673000 |
+|   60000000    | 20.224000 | 36.869000 | 52.101000 | 102.929000 | 89.885000  | 179.584000 |
+|   80000000    | 26.866000 | 49.693000 | 69.725000 | 137.384000 | 119.536000 | 239.356000 |
+|   100000000   | 32.710000 | 61.508000 | 86.079000 | 171.000000 | 149.342000 | 298.043000 |
+
+**Compiler**: gcc
+
+**Flags**: `-g -O3 -lm`
+
+| Vector Length | sSCAL     | dSCAL     | sDOT       | dDOT       | sAXPY      | dAXPY      |
+| ------------- | --------- | --------- | ---------- | ---------- | ---------- | ---------- |
+| 20000000      | 6.377000  | 13.561000 | 34.853000  | 50.526000  | 32.928000  | 64.173000  |
+| 40000000      | 12.148000 | 26.763000 | 69.398000  | 100.064000 | 61.586000  | 124.626000 |
+| 60000000      | 19.758000 | 38.489000 | 103.804000 | 150.921000 | 93.030000  | 185.809000 |
+| 80000000      | 30.590000 | 50.709000 | 138.987000 | 200.757000 | 125.574000 | 249.614000 |
+| 100000000     | 33.822000 | 65.588000 | 174.219000 | 250.510000 | 154.668000 | 311.347000 |
+
+![Screenshot_20220415_184840](/home/prerak/Pictures/Screenshot_20220415_184840.png)
+
+#### BLIS
+
+BLIS has been install at the location `~/blis` on my system, for which I have updated the makefiles accordingly to link all the required files. 
+
+Command
+```shell
+cd blas-problems/blis/q1
+make
+./q1.x
+```
 Output
 ```
-LEVEL 1
-Iterations: 100000000
-Alpha: 1.000000
--------------------------------------------------------
-xSCAL:
-sscal time: 32.295000 ms
-dscal time: 63.656000 ms
--------------------------------------------------------
-xDOT:
-dot: 0.000000
-sdot time: 87.315000 ms
-dot2: 0.000000
-ddot time: 175.900000 ms
--------------------------------------------------------
-xAXPY:
-saxpy time: 152.641000 ms
-daxpy time: 308.531000 ms
--------------------------------------------------------
+sSCAL
+blis sscal time: 0.003000 ms
+dSCAL
+blis dscal time: 0.001000 ms
+sAXPY
+blis saxpy time: 47.813000 ms
+dAXPY
+blis daxpy time: 88.229000 ms
 ```
+

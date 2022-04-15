@@ -5,8 +5,12 @@
 #include <time.h>
 #include <stdlib.h>
 
+#define VEC_SIZE_1 20000000
+#define VEC_SIZE_2 40000000
+#define VEC_SIZE_3 60000000
+#define VEC_SIZE_4 80000000
 #define DEFAULT_VECTOR_LENGTH 100000000 // million
-#define DEFAULT_ALPHA 1.0
+#define DEFAULT_ALPHA 2.0
 
 void cblas_sscal(const int N, const float alpha, float *A, const int incX)
 {
@@ -70,18 +74,30 @@ int main(int argc, char *argv[])
     float *B;
     double *W;
     double *X;
-    int N;
-    float alpha;
+    long long int N;
+    float alpha = DEFAULT_ALPHA;
 
     if (argc > 1)
         N = atoi(argv[1]);
+        if(N == 1)
+        {
+            N = VEC_SIZE_1;
+        }
+        else if(N == 2)
+        {
+            N = VEC_SIZE_2;
+        }
+        else if(N == 3)
+        {
+            N = VEC_SIZE_3;
+        }
+        else if(N == 4)
+        {
+            N = VEC_SIZE_4;
+        }
     else
         N = DEFAULT_VECTOR_LENGTH;
-    
-    if (argc > 2)
-        alpha = atof(argv[2]);
-    else
-        alpha = DEFAULT_ALPHA;
+        
     
     A = (float*)malloc(sizeof(float)*N);
     B = (float*)malloc(sizeof(float)*N);
@@ -109,6 +125,7 @@ int main(int argc, char *argv[])
     cblas_dscal(N, alpha, W, 1);
 
     calctime = tock(&t);
+    
 
     printf("dscal time: %f ms\n", calctime*1000);
 

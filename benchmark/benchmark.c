@@ -32,11 +32,11 @@ void func1(){
     }
 }
 
-int main()
-{
-    // benchmark function 1
-    double time = benchmark(func1, "func1");
-    double flops = 2000000000 / time;
-    printf("FLOPS: %f GFLOPS\n", flops/1000000000);
-    return 0;
-}
+// int main()
+// {
+//     // benchmark function 1
+//     double time = benchmark(func1, "func1");
+//     double flops = 2000000000 / time;
+//     printf("FLOPS: %f GFLOPS\n", flops/1000000000);
+//     return 0;
+// }
