@@ -203,7 +203,7 @@ Triad:          21177.1     0.011542     0.011333     0.012044
 Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 ```
-Therefore, main memory bandwidth is around 25-28 GB/s
+Therefore, main memory bandwidth using the stream benchmark is coming around 25-28 GB/s
 ### 4. 
 
 Secondary Storage Device: HDD
@@ -222,7 +222,6 @@ Secondary Storage Device: HDD
 
 ### BLAS Level 1
 
-#### Approach
 #### BLAS
 Command
 ```shell
@@ -237,6 +236,38 @@ make
 First method for writing LEVEL 1 functions is written in blas-problems/q1/q1.c
 
 Output (The time given here is in ms)
+
+#### Approach 1: Without Optimizations
+
+**Compiler**: icc
+
+**Flags**: `-g -axCORE-AVX2`
+
+| Vector Length |   sSCAL   |   dSCAL   |   sDOT    |    dDOT    |   sAXPY    |   dAXPY    |
+| :-----------: | :-------: | :-------: | :-------: | :--------: | :--------: | :--------: |
+|   20000000    | 5.683000  | 11.999000 | 18.366000 | 36.138000  | 31.115000  | 60.476000  |
+|   40000000    | 11.785000 | 25.601000 | 35.906000 | 70.732000  | 59.858000  | 121.335000 |
+|   60000000    | 20.011000 | 37.013000 | 52.773000 | 102.953000 | 91.307000  | 178.677000 |
+|   80000000    | 25.380000 | 48.444000 | 70.426000 | 137.163000 | 120.422000 | 238.981000 |
+|   100000000   | 30.644000 | 59.337000 | 86.987000 | 172.691000 | 149.039000 | 298.794000 |
+
+**Compiler**: gcc
+
+**Flags**: `-g -lm`
+
+| Vector Length |   sSCAL    |   dSCAL    |    sDOT    |    dDOT    |   sAXPY    |   dAXPY    |
+| :-----------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: |
+|   20000000    | 46.826000  | 49.500000  | 61.455000  | 77.696000  | 78.032000  | 103.776000 |
+|   40000000    | 93.332000  | 95.730000  | 121.595000 | 153.765000 | 158.216000 | 209.573000 |
+|   60000000    | 138.300000 | 142.435000 | 179.921000 | 231.348000 | 230.364000 | 310.813000 |
+|   80000000    | 183.993000 | 187.902000 | 237.832000 | 308.195000 | 306.761000 | 413.144000 |
+|   100000000   | 226.088000 | 235.211000 | 299.763000 | 385.151000 | 383.734000 | 517.293000 |
+
+#### GCC VS ICC
+
+![Screenshot_20220415_200301](/home/prerak/Pictures/Screenshot_20220415_200301.png)
+
+#### Approach 2: With Optimizations (flags)
 
 **Compiler**: icc
 
@@ -262,7 +293,7 @@ Output (The time given here is in ms)
 | 80000000      | 30.590000 | 50.709000 | 138.987000 | 200.757000 | 125.574000 | 249.614000 |
 | 100000000     | 33.822000 | 65.588000 | 174.219000 | 250.510000 | 154.668000 | 311.347000 |
 
-![Screenshot_20220415_192657](/home/prerak/Pictures/Screenshot_20220415_192657.png)
+#### GCC VS ICC![Screenshot_20220415_192657](/home/prerak/Pictures/Screenshot_20220415_192657.png)
 
 #### BLIS
 
