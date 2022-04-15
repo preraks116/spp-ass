@@ -5,11 +5,13 @@
 #include <sys/time.h>
 #include <stdlib.h>
 
-#define VEC_LENGTH_1 1e6
-#define VEC_LENG
+#define VEC_SIZE_1 20000000
+#define VEC_SIZE_2 40000000
+#define VEC_SIZE_3 60000000
+#define VEC_SIZE_4 80000000
 #define DEFAULT_VECTOR_LENGTH 100000000 // million
 // #define DEFAULT_VECTOR_LENGTH 4 // million
-#define DEFAULT_ALPHA 1.0
+#define DEFAULT_ALPHA 2.0
 
 int main(int argc, char **argv)
 {
@@ -18,7 +20,7 @@ int main(int argc, char **argv)
     // struct timeval t;
     double calctime;
 
-    obj_t alpha, beta;
+    obj_t alpha, beta, gamma, delta;
     obj_t a, b, c, d;
     num_t dt, dt2;
     dim_t m, n;
@@ -29,8 +31,33 @@ int main(int argc, char **argv)
 
     // dimensions
     m = 1;
-    n = DEFAULT_VECTOR_LENGTH;
 
+    if (argc > 1)
+    {
+        n = atoi(argv[1]);
+        if (n == 1)
+        {
+            n = VEC_SIZE_1;
+        }
+        else if (n == 2)
+        {
+            n = VEC_SIZE_2;
+        }
+        else if (n == 3)
+        {
+            n = VEC_SIZE_3;
+        }
+        else if (n == 4)
+        {
+            n = VEC_SIZE_4;
+        }
+    }
+    else
+    {
+        n = DEFAULT_VECTOR_LENGTH;
+    }
+    // print n
+    printf("n = %ld\n", n);
     // i have no idea honestly
     rs = 0;
     cs = 0;
@@ -45,9 +72,13 @@ int main(int argc, char **argv)
     // initialize alpha
     bli_obj_create_1x1(dt, &alpha);
     bli_obj_create_1x1(dt2, &beta);
+    bli_obj_create_1x1(dt2, &gamma);
+    bli_obj_create_1x1(dt2, &delta);
 
     bli_setsc(DEFAULT_ALPHA, 0.0, &alpha);
     bli_setsc(DEFAULT_ALPHA, 0.0, &beta);
+    bli_setsc(DEFAULT_ALPHA, 0.0, &gamma);
+    bli_setsc(DEFAULT_ALPHA, 0.0, &delta);
 
     // bli_printm( "alpha:", &alpha, "%4.1f", "" );
 
@@ -95,9 +126,31 @@ int main(int argc, char **argv)
 
     calctime = (double)(end - start) / CLOCKS_PER_SEC;
 
+    printf("blis dscal time: %f ms\n", calctime * 1000);
+
+    start = clock();
+
+    bli_dotv( &a, &c, &gamma );
+
+    end = clock();
+
+    calctime = (double)(end - start) / CLOCKS_PER_SEC;
+
     // calctime = tock(&t);
 
-    printf("blis dscal time: %f ms\n", calctime * 1000);
+    printf("blis sdot time: %f ms\n", calctime * 1000);
+
+    start = clock();
+
+    bli_dotv( &b, &d, &delta );
+
+    end = clock();
+
+    calctime = (double)(end - start) / CLOCKS_PER_SEC;
+
+    // calctime = tock(&t);
+
+    printf("blis ddot time: %f ms\n", calctime * 1000);
 
     // bli_printm( "b := beta * b", &b, "%4f", "" );
 

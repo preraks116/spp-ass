@@ -262,7 +262,7 @@ Output (The time given here is in ms)
 | 80000000      | 30.590000 | 50.709000 | 138.987000 | 200.757000 | 125.574000 | 249.614000 |
 | 100000000     | 33.822000 | 65.588000 | 174.219000 | 250.510000 | 154.668000 | 311.347000 |
 
-![Screenshot_20220415_184840](/home/prerak/Pictures/Screenshot_20220415_184840.png)
+![Screenshot_20220415_192657](/home/prerak/Pictures/Screenshot_20220415_192657.png)
 
 #### BLIS
 
@@ -274,15 +274,21 @@ cd blas-problems/blis/q1
 make
 ./q1.x
 ```
-Output
-```
-sSCAL
-blis sscal time: 0.003000 ms
-dSCAL
-blis dscal time: 0.001000 ms
-sAXPY
-blis saxpy time: 47.813000 ms
-dAXPY
-blis daxpy time: 88.229000 ms
-```
+Output (The time given here is in ms)
+
+| Vector Length | sSCAL     | dSCAL     | sDOT      | dDOT      | sAXPY     | dAXPY     |
+| ------------- | --------- | --------- | --------- | --------- | --------- | --------- |
+| 20000000      | 5.714000  | 12.136000 | 9.010000  | 14.820000 | 10.373000 | 21.235000 |
+| 40000000      | 11.926000 | 30.753000 | 14.807000 | 31.321000 | 18.133000 | 39.392000 |
+| 60000000      | 20.825000 | 39.367000 | 21.812000 | 41.456000 | 28.326000 | 55.455000 |
+| 80000000      | 26.899000 | 50.724000 | 28.183000 | 54.002000 | 36.504000 | 71.568000 |
+| 100000000     | 32.963000 | 64.747000 | 35.517000 | 67.153000 | 45.323000 | 88.239000 |
+
+#### GCC VS BLIS
+
+![Screenshot_20220415_192404](/home/prerak/Pictures/Screenshot_20220415_192404.png)
+
+#### ICC VS BLIS
+
+![Screenshot_20220415_193143](/home/prerak/Pictures/Screenshot_20220415_193143.png)
 
