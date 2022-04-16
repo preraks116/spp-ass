@@ -1,4 +1,5 @@
 # KYC 
+
 ## Prerak Srivastava
 ## 2020111013
 
@@ -243,6 +244,8 @@ Output (The time given here is in ms)
 
 **Flags**: `-g -axCORE-AVX2`
 
+**Execution Time**
+
 | Vector Length |   sSCAL   |   dSCAL   |   sDOT    |    dDOT    |   sAXPY    |   dAXPY    |
 | :-----------: | :-------: | :-------: | :-------: | :--------: | :--------: | :--------: |
 |   20000000    | 5.683000  | 11.999000 | 18.366000 | 36.138000  | 31.115000  | 60.476000  |
@@ -251,9 +254,21 @@ Output (The time given here is in ms)
 |   80000000    | 25.380000 | 48.444000 | 70.426000 | 137.163000 | 120.422000 | 238.981000 |
 |   100000000   | 30.644000 | 59.337000 | 86.987000 | 172.691000 | 149.039000 | 298.794000 |
 
+**GFlops**
+
+| Vector Length | sSCAL              | dSCAL              | sDOT               | dDOT               | sAXPY              | dAXPY              |
+| ------------- | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ |
+| 20000000      | 3.5192679922576104 | 1.6668055671305941 | 2.1779374931939453 | 1.1068681166638994 | 1.2855535915153462 | 0.6614194060453734 |
+| 40000000      | 3.3941450997030125 | 1.5624389672278427 | 2.2280398819138862 | 1.1310298026352994 | 1.3364963747535834 | 0.6593316025878765 |
+| 60000000      | 2.998350907001149  | 1.62105206278875   | 2.273890057415724  | 1.1655804104785679 | 1.314247538523881  | 0.6716029483369432 |
+| 80000000      | 3.1520882584712373 | 1.651391297167864  | 2.2718882230994235 | 1.1664953376639473 | 1.3286608759196825 | 0.6695092915336366 |
+| 100000000     | 3.1520882584712373 | 1.6852891113470516 | 2.299194132456574  | 1.1581379458107255 | 1.3419306356054455 | 0.6693574837513471 |
+
 **Compiler**: gcc
 
 **Flags**: `-g -lm`
+
+**Execution Time**:
 
 | Vector Length |   sSCAL    |   dSCAL    |    sDOT    |    dDOT    |   sAXPY    |   dAXPY    |
 | :-----------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: |
@@ -263,15 +278,27 @@ Output (The time given here is in ms)
 |   80000000    | 183.993000 | 187.902000 | 237.832000 | 308.195000 | 306.761000 | 413.144000 |
 |   100000000   | 226.088000 | 235.211000 | 299.763000 | 385.151000 | 383.734000 | 517.293000 |
 
+**GFlops**:
+
+| Vector Length | sSCAL               | dSCAL               | sDOT               | dDOT               | sAXPY              | dAXPY               |
+| ------------- | ------------------- | ------------------- | ------------------ | ------------------ | ------------------ | ------------------- |
+| 20000000      | 0.4271131422713877  | 0.40404040404040403 | 0.6508827597429013 | 0.514827018121911  | 0.5126102111954071 | 0.38544557508479804 |
+| 40000000      | 0.428577551107873   | 0.41784184686096315 | 0.6579217895472675 | 0.5202744447696159 | 0.5056378621631188 | 0.38172856236251806 |
+| 60000000      | 0.43383947939262474 | 0.4212447783199354  | 0.666959387731282  | 0.5186991026505524 | 0.5209147262593113 | 0.3860842371458079  |
+| 80000000      | 0.43479914996766184 | 0.42575385041138464 | 0.6727437855292812 | 0.519151835688444  | 0.5215786882947963 | 0.38727417074918186 |
+| 100000000     | 0.44230565089699586 | 0.42515018430260487 | 0.6671937497289525 | 0.5192768550516551 | 0.5211943690160371 | 0.3866280811841645  |
+
 #### GCC VS ICC
 
-![Screenshot_20220415_200301](/home/prerak/Pictures/Screenshot_20220415_200301.png)
+![Screenshot_20220415_200301](blas-problems/q1/graphs/gcc-vs-icc-unop.png)
 
 #### Approach 2: With Optimizations (flags)
 
-**Compiler**: icc
+#### **Compiler**: icc
 
 **Flags**: `-g -O3 -axCORE-AVX2`
+
+**Execution Time**: 
 
 | Vector Length |   sSCAL   |   dSCAL   |   sDOT    |    dDOT    |   sAXPY    |   dAXPY    |
 | :-----------: | :-------: | :-------: | :-------: | :--------: | :--------: | :--------: |
@@ -281,9 +308,21 @@ Output (The time given here is in ms)
 |   80000000    | 26.866000 | 49.693000 | 69.725000 | 137.384000 | 119.536000 | 239.356000 |
 |   100000000   | 32.710000 | 61.508000 | 86.079000 | 171.000000 | 149.342000 | 298.043000 |
 
-**Compiler**: gcc
+**GFlops**:
+
+| Vector Length | sSCAL  | dSCAL  | sDOT   | dDOT   | sAXPY  | dAXPY  |
+| ------------- | ------ | ------ | ------ | ------ | ------ | ------ |
+| 20000000      | 3.4077 | 3.4077 | 2.2071 | 1.097  | 1.311  | 0.6599 |
+| 40000000      | 3.3184 | 3.3184 | 2.202  | 1.1393 | 1.3253 | 0.6629 |
+| 60000000      | 2.9667 | 2.9668 | 2.3032 | 1.1659 | 1.335  | 0.6682 |
+| 80000000      | 2.9777 | 2.9777 | 2.2947 | 1.1646 | 1.3385 | 0.6685 |
+| 100000000     | 3.057  | 3.0572 | 2.3234 | 1.1696 | 1.3392 | 0.671  |
+
+#### **Compiler**: gcc
 
 **Flags**: `-g -O3 -lm`
+
+**Execution Time**:
 
 | Vector Length | sSCAL     | dSCAL     | sDOT       | dDOT       | sAXPY      | dAXPY      |
 | ------------- | --------- | --------- | ---------- | ---------- | ---------- | ---------- |
@@ -293,7 +332,17 @@ Output (The time given here is in ms)
 | 80000000      | 30.590000 | 50.709000 | 138.987000 | 200.757000 | 125.574000 | 249.614000 |
 | 100000000     | 33.822000 | 65.588000 | 174.219000 | 250.510000 | 154.668000 | 311.347000 |
 
-#### GCC VS ICC![Screenshot_20220415_192657](/home/prerak/Pictures/Screenshot_20220415_192657.png)
+**GFlops**:
+
+| Vector Length | sSCAL  | dSCAL  | sDOT   | dDOT   | sAXPY  | dAXPY  |
+| ------------- | ------ | ------ | ------ | ------ | ------ | ------ |
+| 20000000      | 3.1363 | 1.4748 | 1.1477 | 0.7917 | 1.2148 | 0.6233 |
+| 40000000      | 3.2927 | 1.4946 | 1.1528 | 0.7995 | 1.299  | 0.6419 |
+| 60000000      | 3.0367 | 1.5589 | 1.156  | 0.7951 | 1.2899 | 0.6458 |
+| 80000000      | 2.6152 | 1.5776 | 1.1512 | 0.797  | 1.2741 | 0.641  |
+| 100000000     | 2.9567 | 1.5247 | 1.148  | 0.7984 | 1.2931 | 0.6424 |
+
+#### GCC VS ICC![Screenshot_20220415_192657](blas-problems/q1/graphs/gcc-vs-icc.png)
 
 #### BLIS
 
@@ -303,9 +352,15 @@ Command
 ```shell
 cd blas-problems/blis/q1
 make
+./q1.x 1
+./q1.x 2
+./q1.x 3
+./q1.x 4
 ./q1.x
 ```
-Output (The time given here is in ms)
+Output
+
+**Execution Time**:
 
 | Vector Length | sSCAL     | dSCAL     | sDOT      | dDOT      | sAXPY     | dAXPY     |
 | ------------- | --------- | --------- | --------- | --------- | --------- | --------- |
@@ -315,11 +370,184 @@ Output (The time given here is in ms)
 | 80000000      | 26.899000 | 50.724000 | 28.183000 | 54.002000 | 36.504000 | 71.568000 |
 | 100000000     | 32.963000 | 64.747000 | 35.517000 | 67.153000 | 45.323000 | 88.239000 |
 
+**GFlops**:
+
+| Vector Length | sSCAL  | dSCAL  | sDOT   | dDOT   | sAXPY  | dAXPY  |
+| ------------- | ------ | ------ | ------ | ------ | ------ | ------ |
+| 20000000      | 3.5002 | 1.648  | 4.4395 | 2.6991 | 3.8562 | 1.8837 |
+| 40000000      | 3.354  | 1.3007 | 5.4029 | 2.5542 | 4.4118 | 2.0309 |
+| 60000000      | 2.8812 | 1.5241 | 5.5016 | 2.8946 | 4.2364 | 2.1639 |
+| 80000000      | 2.9741 | 1.5772 | 5.6772 | 2.9629 | 4.3831 | 2.2356 |
+| 100000000     | 3.0337 | 1.5445 | 5.6311 | 2.9783 | 4.4128 | 2.2666 |
+
 #### GCC VS BLIS
 
-![Screenshot_20220415_192404](/home/prerak/Pictures/Screenshot_20220415_192404.png)
+![Screenshot_20220415_192404](blas-problems/q1/graphs/gcc-vs-blis.png)
 
 #### ICC VS BLIS
 
-![Screenshot_20220415_193143](/home/prerak/Pictures/Screenshot_20220415_193143.png)
+![Screenshot_20220415_193143](blas-problems/q1/graphs/icc-vs-blis.png)
+
+#### Operational Intensity
+
+$$
+OI = \frac{\text{number of operations}}{\text{number of bytes}}
+$$
+
+1. sSCAL
+
+   The number of bytes that are involved in the operation will be 4 multiplied by the length of the vector because data type is float. For scaling, one operation is applied per number in the vector, making the total number of operations equal to N
+   $$
+    
+   \therefore \ OI = \frac{N}{N*4} = 0.25
+   $$
+
+2. dSCAL 
+
+   The number of bytes that are involved in the operation will be 4 multiplied by the length of the vector because data type is double. For scaling, one operation is applied per number in the vector, making the total number of operations equal to N
+   $$
+   \therefore \ OI = \frac{N}{N*8} = 0.125
+   $$
+
+3. sDOT
+
+   The number of operations in dot product will be 2\*N as each corresponding number in the vector will be multiplied and then this product is being added to a variable. The total number of bytes that are involved will be 2\*N\*4 as 2 vectors are need for dot product and each number is of size 4 bytes(float).
+   $$
+   OI = \frac{2*N}{2*N*4} = 0.25
+   $$
+   
+4. dDOT
+
+   The number of operations in dot product will be 2\*N as each corresponding number in the vector will be multiplied and then this product is being added to a variable. The total number of bytes that are involved will be 2\*N\*8 as 2 vectors are need for dot product and each number is of size 8 bytes(double).
+   $$
+   OI = \frac{2*N}{2*N*8} = 0.125
+   $$
+
+5. sAXPY
+
+   The number of operations in dot product will be 2\*N as each corresponding number in the vector will be multiplied and then this product is being added to a variable. The total number of bytes that are involved will be 2\*N\*4 as 2 vectors are need for dot product and each number is of size 4 bytes(float).
+   $$
+   OI = \frac{2*N}{2*N*4} = 0.25
+   $$
+   
+6. dAXPY
+
+   The number of operations in dot product will be 2\*N as each corresponding number in the vector will be multiplied and then this product is being added to a variable. The total number of bytes that are involved will be 2\*N\*8 as 2 vectors are need for dot product and each number is of size 8 bytes(double).
+   $$
+   OI = \frac{2*N}{2*N*8} = 0.125
+   $$
+
+#### Baseline and Best Execution Times (in ms)
+
+| Function | Baseline Execution Time | Best Execution Time |
+| -------- | ----------------------- | ------------------- |
+| sSCAL    | 226.088000              | 30.644000           |
+| dSCAL    | 235.211000              | 59.337000           |
+| sDOT     | 299.763000              | 86.079000           |
+| dDOT     | 385.151000              | 171.000000          |
+| sAXPY    | 383.734000              | 149.039000          |
+| dAXPY    | 517.293000              | 298.043000          |
+
+#### Speedup
+
+Using the data for vector length = 100000000
+$$
+\text{Speedup} = \frac{\text{Baseline Execution Time}}{\text{Best Execution Time}}
+$$
+
+1. sSCAL
+   $$
+   \text{Speedup} = \frac{226.088}{30.644} = 7.37888
+   $$
+
+2. dSCAL
+   $$
+   \text{Speedup} = \frac{235.211}{59.337} = 3.9639
+   $$
+
+3. sDOT 
+   $$
+   \text{Speedup} = \frac{299.763}{86.079} = 3.48241
+   $$
+
+4. dDOT
+   $$
+   \text{Speedup} = \frac{385.151}{171} = 2.252345
+   $$
+
+5. sAXPY
+   $$
+   \text{Speedup} = \frac{383.734}{149.039} = 2.574722
+   $$
+
+6. dAXPY
+   $$
+   \text{Speedup} = \frac{517.293}{298.043} = 1.735632
+   $$
+   
+
+#### Baseline and Optimized GFlops
+
+ Using the data for vector length = 100000000
+$$
+\text{GFlops} = \frac{\text{Number of floating point operations}}{\text{Execution Time (in ms)}*10^6}
+$$
+
+For sSCAL and dSCAL, 
+$$
+\text{GFlops} = \frac{N}{Time}
+$$
+and for the rest of the functions
+$$
+\text{GFlops} = \frac{2*N}{Time}
+$$
+
+
+|                  | sSCAL  | dSCAL  | sDOT    | dDOT    | sAXPY   | dAXPY   |
+| ---------------- | ------ | ------ | ------- | ------- | ------- | ------- |
+| Baseline GFlops  | 0.4423 | 0.4251 | 0.66719 | 0.51927 | 0.52119 | 0.38662 |
+| Optimized GFlops | 3.152  | 3.0572 | 5.6311  | 2.9783  | 4.4128  | 2.2666  |
+
+**Is the problem memory bound or compute bound?**
+
+#### Memory BandWidth
+
+$$
+\text{Memory Bandwidth} = \frac{\text{Number of bytes accessed}}{\text{time}}
+$$
+
+For sSCAL, 
+$$
+\text{Memory Bandwidth} = \frac{N*4}{\text{Time}}
+$$
+For dSCAL,
+$$
+\text{Memory Bandwidth} = \frac{N*8}{\text{Time}}
+$$
+For sDOT,
+$$
+\text{Memory Bandwidth} = \frac{N*4*2}{\text{Time}}
+$$
+For dDOT,
+$$
+\text{Memory Bandwidth} = \frac{N*8*2}{\text{Time}}
+$$
+For sAXPY,
+$$
+\text{Memory Bandwidth} = \frac{N*4*2}{\text{Time}}
+$$
+For dAXPY,
+$$
+\text{Memory Bandwidth} = \frac{N*8*2}{\text{Time}}
+$$
+Using the data for vector length = 100000000, for the BLIS implementation, since it is the most optimized
+
+| Function | Memory Bandwidth (in GB/s) |
+| :------: | :------------------------: |
+|  sSCAL   |          12.1348           |
+|  dSCAL   |          12.3557           |
+|   sDOT   |          22.5244           |
+|   dDOT   |          23.8261           |
+|  sAXPY   |           17.651           |
+|  dAXPY   |          18.1325           |
 

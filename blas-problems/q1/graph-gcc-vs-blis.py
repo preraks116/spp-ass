@@ -24,6 +24,13 @@ blis_daxpy = [21.235000 , 39.392000 , 55.455000 , 71.568000 , 88.239000 ]
 #legend
 legend = ['GCC sscal', 'GCC dscal', 'GCC sdot', 'GCC ddot', 'GCC saxpy', 'GCC daxpy', 'BLIS sscal', 'BLIS dscal', 'BLIS sdot', 'BLIS ddot', 'BLIS saxpy', 'BLIS daxpy']
 
+# add x and y labels
+plt.xlabel('Vector Length')
+plt.ylabel('Time in ms')
+
+# add a heading
+plt.title('GCC vs BLIS')
+
 # plot
 plt.plot(vec_len, gcc_sscal, 'r-', label='GCC sscal')
 plt.plot(vec_len, gcc_dscal, 'g-', label='GCC dscal')

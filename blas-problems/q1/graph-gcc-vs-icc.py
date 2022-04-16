@@ -20,7 +20,9 @@ gcc_daxpy = [64.173000  , 124.626000 , 185.809000 , 249.614000 , 311.347000]
 
 
 # plot the graphs with vec_len as x-axis and time in ms as y-axis
-
+plt.xlabel('Vector Length')
+plt.ylabel('Time in ms')
+plt.title('GCC vs ICC Optimized')
 #legend
 legend = ['icc_sscal', 'icc_dscal', 'icc_sdot', 'icc_ddot', 'icc_saxpy', 'icc_daxpy', 'gcc_sscal', 'gcc_dscal', 'gcc_sdot', 'gcc_ddot', 'gcc_saxpy', 'gcc_daxpy']
 

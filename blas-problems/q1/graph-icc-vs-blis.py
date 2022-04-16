@@ -19,7 +19,9 @@ blis_saxpy = [10.373000 , 18.133000 , 28.326000 , 36.504000 , 45.323000 ]
 blis_daxpy = [21.235000 , 39.392000 , 55.455000 , 71.568000 , 88.239000 ]
 
 # plot the graphs with vec_len as x-axis and time in ms as y-axis
-
+plt.xlabel('Vector Length')
+plt.ylabel('Time in ms')
+plt.title('ICC vs BLIS')
 #legend
 legend = ['icc_sscal', 'icc_dscal', 'icc_sdot', 'icc_ddot', 'icc_saxpy', 'icc_daxpy', 'blis_sscal', 'blis_dscal', 'blis_sdot', 'blis_ddot', 'blis_saxpy', 'blis_daxpy']
 
