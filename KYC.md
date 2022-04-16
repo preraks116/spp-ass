@@ -1,6 +1,7 @@
-# KYC 
+## Software Programming for Performance Assignment
 
 ## Prerak Srivastava
+
 ## 2020111013
 
 ### 1. 
@@ -550,4 +551,8 @@ Using the data for vector length = 100000000, for the BLIS implementation, since
 |   dDOT   |          23.8261           |
 |  sAXPY   |           17.651           |
 |  dAXPY   |          18.1325           |
+
+### BLAS Level 2
+
+Assuming the vector to be a column vector, which makes it easier to write the function, as we can directly multiply the matrix with the vector without having to calculate the transpose of the matrix.
 

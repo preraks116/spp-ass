@@ -38,3 +38,23 @@ void printVector(int n, float *A)
     }
     printf("\n");
 }
+
+void RandomMatrixFloat(int m, int n, float *A)
+{
+    for(int i=0; i < m; ++i) {
+        for(int j=0; j < n; ++j) {
+            A[i*n+j] = (float) rand()/RAND_MAX;
+        }
+    }
+}
+
+void PrintMatrix(int m, int n, float *A)
+{
+    for(int i=0; i < m; ++i) {
+        for(int j=0; j < n; ++j) {
+            printf("%f ", A[i*n+j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
