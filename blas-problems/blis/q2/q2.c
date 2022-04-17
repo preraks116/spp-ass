@@ -79,7 +79,6 @@ int main(int argc, char **argv)
 	beta  = &BLIS_ONE;
 
     // creating 1D vector objects
-    dt = BLIS_FLOAT;
 	bli_obj_create( dt, m, n, rs, cs, &a );
 	bli_obj_create( dt, 1, n, rs, cs, &X );
 	bli_obj_create( dt, 1, m, rs, cs, &Y );

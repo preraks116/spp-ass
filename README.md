@@ -624,7 +624,7 @@ make
 
 ​	![Screenshot_20220417_083935](/home/prerak/Pictures/Screenshot_20220417_083935.png)
 
-#### Approach 2: With Optimizations
+#### Approach 2: Vectorization using -O3
 
 #### **Compiler**: icc
 
@@ -676,6 +676,74 @@ make
 
 ![img](file:///home/prerak/Pictures/Screenshot_20220417_084129.png)
 
+#### Approach 3: Parallelization using OpenMP
+
+To facilitate parallelization, a temp variable was defined separately so that `Y` is not accessed in the inner for loop, which removes the loop dependencies and allows for parallelization.
+
+```c
+#pragma omp parallel for
+for(int i = 0; i < M; i++)
+{
+ 	double temp = 0.0;
+    Y[i*incY] = beta * Y[i*incY];
+    for(int j = 0; j < N; j++)
+    {
+        temp += alpha * A[i*lda+j] * X[j*incX];
+    }
+    Y[i*incY] += temp;
+}
+```
+
+#### Compiler : icc
+
+**Flags**: `-g -axCORE-AVX2 -O3 -qopenmp`
+
+**Execution Time**: 
+
+| Rows  | Columns | sGEMV     | dGEMV     |
+| ----- | ------- | --------- | --------- |
+| 2000  | 4000    | 1.872000  | 2.402000  |
+| 4000  | 6000    | 3.450000  | 5.746000  |
+| 6000  | 8000    | 6.038000  | 11.031000 |
+| 8000  | 10000   | 10.227000 | 19.049000 |
+| 10000 | 12000   | 14.853000 | 27.858000 |
+
+**GFlops:** 
+
+| Rows  | Columns | sGEMV   | dGEMV   |
+| ----- | ------- | ------- | ------- |
+| 2000  | 4000    | 12.8216 | 9.9925  |
+| 4000  | 6000    | 20.8707 | 12.5312 |
+| 6000  | 8000    | 23.85   | 13.0547 |
+| 8000  | 10000   | 23.4681 | 12.5995 |
+| 10000 | 12000   | 24.2382 | 12.923  |
+
+#### Compiler: gcc
+
+**Flags**: `-g -O3 -lm -fopenmp`
+
+**Execution Time**: 
+
+| Rows  | Columns | sGEMV     | dGEMV     |
+| ----- | ------- | --------- | --------- |
+| 2000  | 4000    | 1.208000  | 1.530000  |
+| 4000  | 6000    | 3.467000  | 4.771000  |
+| 6000  | 8000    | 6.805000  | 10.778000 |
+| 8000  | 10000   | 11.866000 | 17.777000 |
+| 10000 | 12000   | 17.092000 | 27.520000 |
+
+**GFlops:** 
+
+| Rows  | Columns | sGEMV   | dGEMV   |
+| ----- | ------- | ------- | ------- |
+| 2000  | 4000    | 19.8692 | 15.6876 |
+| 4000  | 6000    | 20.7684 | 15.092  |
+| 6000  | 8000    | 21.1618 | 13.3611 |
+| 8000  | 10000   | 20.2265 | 13.501  |
+| 10000 | 12000   | 21.0631 | 13.0818 |
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_035438.png)
+
 #### BLIS
 
 Command
@@ -694,29 +762,33 @@ make
 
 | Rows  | Columns | sGEMV     | dGEMV     |
 | ----- | ------- | --------- | --------- |
-| 2000  | 4000    | 1.384000  | 1.548000  |
-| 4000  | 6000    | 4.267000  | 4.067000  |
-| 6000  | 8000    | 7.819000  | 7.785000  |
-| 8000  | 10000   | 12.805000 | 12.866000 |
-| 10000 | 12000   | 19.069000 | 19.196000 |
+| 2000  | 4000    | 1.384000  | 2.449000  |
+| 4000  | 6000    | 4.267000  | 7.365000  |
+| 6000  | 8000    | 7.819000  | 14.861000 |
+| 8000  | 10000   | 12.805000 | 27.344000 |
+| 10000 | 12000   | 19.069000 | 37.570000 |
 
 **GFlops**:
 
-| Rows  | Columns | sGEMV   | dGEMV   |
-| ----- | ------- | ------- | ------- |
-| 2000  | 4000    | 17.3425 | 15.5052 |
-| 4000  | 6000    | 16.8746 | 17.7045 |
-| 6000  | 8000    | 18.4174 | 18.4979 |
-| 8000  | 10000   | 18.7433 | 18.6544 |
-| 10000 | 12000   | 18.8793 | 18.7544 |
+| Rows  | Columns | sGEMV   | dGEMV  |
+| ----- | ------- | ------- | ------ |
+| 2000  | 4000    | 17.3425 | 9.8007 |
+| 4000  | 6000    | 16.8746 | 9.7765 |
+| 6000  | 8000    | 18.4174 | 9.6902 |
+| 8000  | 10000   | 18.7433 | 8.7774 |
+| 10000 | 12000   | 18.8793 | 9.5824 |
 
-#### BLIS VS GCC
+#### sGEMV Performance Graph
 
-![img](file:///home/prerak/Pictures/Screenshot_20220417_084301.png)
+Both baseline and vectorized gcc versions performed poorly as compared to the rest, because of which the other lines in the graph were become indiscernible, so for this reason those werent plotted.
 
-#### BLIS VS ICC
+![img](file:///home/prerak/Pictures/Screenshot_20220418_032917.png)
 
-![img](file:///home/prerak/Pictures/Screenshot_20220417_084417.png)
+#### dGEMV Performance
+
+Baseline gcc version performed poorly as compared to the rest, because of which the other lines in the graph were become indiscernible, so for this reason it wasnt plotted.
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_033902.png)
 
 #### Baseline and Best Execution Times (in ms)
 
@@ -724,18 +796,18 @@ Using the data for matrix dimensions 10000*12000
 
 | Function | Baseline Execution Time | Best Execution Time |
 | -------- | ----------------------- | ------------------- |
-| sGEMV    | 369.120000              | 18.616000           |
-| dGEMV    | 381.355000              | 19.196000           |
+| sGEMV    | 369.120000              | 14.853000           |
+| dGEMV    | 381.355000              | 27.520000           |
 
 #### Speedup
 
 For sGEMV, 
 $$
-\text{Speedup} = \frac{369.12}{18.616} = 19.8281
+\text{Speedup} = \frac{369.12}{14.853} = 24.8515
 $$
 For dGEMV, 
 $$
-\text{Speedup} = \frac{381.355}{19.196} = 19.8663
+\text{Speedup} = \frac{381.355}{27.52} = 13.8573
 $$
 
 #### Baseline and Optimized GFlops
@@ -768,7 +840,7 @@ Using the data for matrix dimensions 10000*12000
 |                  | sGEMV   | dGEMV   |
 | ---------------- | ------- | ------- |
 | Baseline GFlops  | 0.9753  | 0.944   |
-| Optimized GFlops | 19.3387 | 18.7544 |
+| Optimized GFlops | 24.2382 | 13.0818 |
 
 #### Operational Intensity
 
@@ -808,8 +880,66 @@ Using the data for matrix dimensions 10000*12000
 
 | Function | Memory Bandwidth (GB/s) |
 | -------- | ----------------------- |
-| sGEMV    | 25.7889                 |
-| dGEMV    | 50.0195                 |
+| sGEMV    | 32.322                  |
+| dGEMV    | 34.8901                 |
 
 **Is the problem memory bound or compute bound?**
+
+### BLAS Level 3
+
+#### BLAS
+
+#### Approach 1: Without Optimizations
+
+#### Compiler: icc
+
+**Flags**:
+
+**Execution Time**:
+
+**GFlops**:
+
+#### Compiler: gcc
+
+**Flags**:
+
+**Execution Time**:
+
+**GFlops**:
+
+#### Approach 2: Vectorization using -O3
+
+**Flags**:
+
+**Execution Time**:
+
+**GFlops**:
+
+#### Compiler: gcc
+
+**Flags**:
+
+**Execution Time**:
+
+**GFlops**:
+
+#### Approach 3: Parallelization using OpenMP
+
+**Flags**:
+
+**Execution Time**:
+
+**GFlops**:
+
+#### Compiler: gcc
+
+**Flags**:
+
+**Execution Time**:
+
+**GFlops**:
+
+
+
+
 
