@@ -27,11 +27,19 @@ void RandomVectorFloat(int n, float *A)
 void RandomVectorDouble(int n, double *A)
 {
     for(int i=0; i < n; ++i) {
-        A[i] = (double) (rand()/RAND_MAX);
+        A[i] = (double) rand()/RAND_MAX;
     }
 }
 
-void printVector(int n, float *A)
+void PrintVectorFloat(int n, float *A)
+{
+    for(int i=0; i < n; ++i) {
+        printf("%f ", A[i]);
+    }
+    printf("\n");
+}
+
+void PrintVectorDouble(int n, double *A)
 {
     for(int i=0; i < n; ++i) {
         printf("%f ", A[i]);
@@ -48,7 +56,27 @@ void RandomMatrixFloat(int m, int n, float *A)
     }
 }
 
-void PrintMatrix(int m, int n, float *A)
+void RandomMatrixDouble(int m, int n, double *A)
+{
+    for(int i=0; i < m; ++i) {
+        for(int j=0; j < n; ++j) {
+            A[i*n+j] = (double) rand()/RAND_MAX;
+        }
+    }
+}
+
+void PrintMatrixFloat(int m, int n, float *A)
+{
+    for(int i=0; i < m; ++i) {
+        for(int j=0; j < n; ++j) {
+            printf("%f ", A[i*n+j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void PrintMatrixDouble(int m, int n, double *A)
 {
     for(int i=0; i < m; ++i) {
         for(int j=0; j < n; ++j) {

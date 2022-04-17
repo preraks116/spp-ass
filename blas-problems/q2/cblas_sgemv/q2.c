@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
-#include "../utils/cblas.h"
-#include "../utils/helper.h"
+#include "../../utils/cblas.h"
+#include "../../utils/helper.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -10,12 +10,12 @@
 malloc(): corrupted top size
 zsh: abort (core dumped)  ./q2
 */
-#define DIM_SIZE_1 20
-#define DIM_SIZE_2 40
-#define DIM_SIZE_3 60
-#define DIM_SIZE_4 80
-#define DIM_SIZE_5 100
-#define DIM_SIZE_6 120
+#define DIM_SIZE_1 2000
+#define DIM_SIZE_2 4000
+#define DIM_SIZE_3 6000
+#define DIM_SIZE_4 8000
+#define DIM_SIZE_5 10000
+#define DIM_SIZE_6 12000
 #define DEFAULT_ALPHA 1.0
 #define DEFAULT_BETA 1.0
 
@@ -90,10 +90,11 @@ int main(int argc, char *argv[])
     int N = 3; //col
 
     struct timeval t;
-    double calctime;
+    double* calctime = (double *)malloc(sizeof(double));
     float *X;
     float *Y;
     float *A;
+
     float alpha = DEFAULT_ALPHA;
     float beta = DEFAULT_BETA;
 
@@ -128,20 +129,28 @@ int main(int argc, char *argv[])
     }
     else
     {
-        M = DIM_SIZE_1;
-        N = DIM_SIZE_2;
+        M = DIM_SIZE_5;
+        N = DIM_SIZE_6;
     }
     
 
-    // CblasRowMajor -> N > M - works
-    // CblasColMajor -> M > N
+    // CblasRowMajor -> N > M
+    // CblasColMajor -> M > N 
 
     X = (float *)malloc(N * sizeof(float));
     Y = (float *)malloc(M * sizeof(float));
     A = (float *)malloc(M * N * sizeof(float));
 
+    // V = (double *)malloc(M * sizeof(double));
+    // W = (double *)malloc(N * sizeof(double));
+    // B = (double *)malloc(M * sizeof(double));
+
     RandomVectorFloat(N, X);
-    RandomVectorFloat(N, Y);
+    RandomVectorFloat(M, Y);
+
+    // RandomVectorDouble(M, V);
+    // RandomVectorDouble(N, W);
+
     // for(int i=0; i < N; ++i) {
     //     X[i] = 1.0;
     // }
@@ -151,6 +160,9 @@ int main(int argc, char *argv[])
 
 
     RandomMatrixFloat(M, N, A);
+
+    // RandomMatrixDouble(M, N, B);
+
     // for(int i=0; i < M; ++i) {
     //     for(int j=0; j < N; ++j) {
     //         A[i*N+j] = 1.0;
@@ -159,14 +171,14 @@ int main(int argc, char *argv[])
 
         // print x and y
     // print dimensions
-    printf("M: %d, N: %d\n", M, N);
-    printf("X: ");
-    printVector(N, X);
-    printf("Y: ");
-    printVector(M, Y);
+    
+    // printf("X: ");
+    // printVector(N, X);
+    // printf("Y: ");
+    // printVector(M, Y);
     // print alpha and beta
-    printf("alpha: %f\n", alpha);
-    printf("beta: %f\n", beta);
+    // printf("alpha: %f\n", alpha);
+    // printf("beta: %f\n", beta);
     // printf("A: \n");
     // PrintMatrix(M, N, A);
 
@@ -174,11 +186,33 @@ int main(int argc, char *argv[])
 
     cblas_sgemv(CblasRowMajor, CblasNoTrans, M, N, alpha, A, M, X, 1, beta, Y, 1);
 
-    calctime = tock(&t);
+    *calctime = tock(&t);
+
+    free(X);
+    printf("M: %d, N: %d\n", M, N);
+    printf("Y: ");
+    PrintVectorFloat(M, Y);
+    free(Y);
+    free(A);
+    
+    printf("Time: %f\n", *calctime * 1000);
+
+    // tick(&t);
+
+    // cblas_dgemv(CblasRowMajor, CblasNoTrans, M, N, alpha_d, B, M, V, 1, beta_d, W, 1);
+
+    // *calctime += tock(&t);
+    // printf("W: ");
+    // PrintVectorDouble(N, W);
+    // printf("Time: %f\n", *calctime * 1000);
+    // // free 
+    // free(V);
+    // free(W);
+    // free(B);
 
     // print y
-    printf("Y: ");
-    printVector(M, Y);
-
-    printf("Time: %f\n", calctime);
+    
+    // printVector(M, Y);
+    // free all the memory mallocd
+    
 }
