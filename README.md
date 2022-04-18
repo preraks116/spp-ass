@@ -509,7 +509,9 @@ $$
 | Baseline GFlops  | 0.4423 | 0.4251 | 0.66719 | 0.51927 | 0.52119 | 0.38662 |
 | Optimized GFlops | 3.152  | 3.0572 | 5.6311  | 2.9783  | 4.4128  | 2.2666  |
 
-**Is the problem memory bound or compute bound?**
+#### **Is the problem memory bound or compute bound?**
+
+
 
 #### Memory BandWidth
 
@@ -813,11 +815,13 @@ Using the data for matrix dimensions 10000*12000
 
 #### Speedup
 
-For sGEMV, 
+1. For sGEMV, 
+
 $$
 \text{Speedup} = \frac{369.12}{14.853} = 24.8515
 $$
-For dGEMV, 
+2. For dGEMV, 
+
 $$
 \text{Speedup} = \frac{381.355}{27.52} = 13.8573
 $$
@@ -893,7 +897,9 @@ Using the data for matrix dimensions 10000*12000
 | sGEMV    | 32.322                  |
 | dGEMV    | 34.8901                 |
 
-**Is the problem memory bound or compute bound?**
+#### Is the Process CPU Bound or Memory Bound?
+
+
 
 ### BLAS Level 3
 
@@ -957,6 +963,8 @@ make
 | 1400 | 1600 | 1800 | 0.6995   | 0.6307 |
 | 2000 | 2200 | 2400 | 0.6769   | 0.5688 |
 
+![img](file:///home/prerak/Pictures/Screenshot_20220418_172428.png)
+
 #### Approach 2: Vectorization using -O3
 
 #### Compiler: icc
@@ -1007,6 +1015,8 @@ make
 | 1400 | 1600 | 1800 | 1.341233 | 1.0675 |
 | 2000 | 2200 | 2400 | 0.808292 | 0.6902 |
 
+![img](file:///home/prerak/Pictures/Screenshot_20220418_172618.png)
+
 #### Approach 3: Parallelization using OpenMP
 
 ```c
@@ -1029,6 +1039,7 @@ void cblas_xgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
         for(int j = 0; j < N; j++)
         {
             phiC(i,j) += cblas_sdot(K, rowA(i), 1, colB(j), ldb);
+            phiC(i,j) *= alpha;
         }
     }
 }
@@ -1082,6 +1093,8 @@ void cblas_xgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
 | 1400 | 1600 | 1800 | 2.825  | 2.6583 |
 | 2000 | 2200 | 2400 | 2.7133 | 2.4588 |
 
+![img](file:///home/prerak/Pictures/Screenshot_20220418_172725.png)
+
 #### BLIS
 
 Command
@@ -1116,16 +1129,36 @@ make
 | 1400 | 1600 | 1800 | 160.9509 | 82.0873 |
 | 2000 | 2200 | 2400 | 172.4249 | 79.9891 |
 
+![img](file:///home/prerak/Pictures/Screenshot_20220418_172941.png)
+
+#### sGEMM Performance
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_173251.png)
+
+#### dGEMM
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_173436.png)
+
 #### Baseline and Best Execution Times
 
 Using the data for M = 2000, K = 2200, N = 2400
 
 | Function | Baseline Execution Time | Best Execution Time |
 | -------- | ----------------------- | ------------------- |
-| sGEMM    |                         |                     |
-| dGEMM    |                         |                     |
+| sGEMM    | 46805.713000            | 183.760000          |
+| dGEMM    | 55708.977000            | 396.114000          |
 
 #### Speedup
+
+1. For sGEMM 
+   $$
+   \text{Speedup} = \frac{46805.713000}{183.760000} = 254.7111
+   $$
+
+2. For dGEMM
+   $$
+   \text{Speedup} = \frac{55708.977000}{396.114000} = 140.63874
+   $$
 
 #### Baseline and Optimized GFlops
 
@@ -1137,12 +1170,13 @@ for(int i = 0; i < M; i++)
     for(int j = 0; j < N; j++)
     {
         phiC(i,j) += cblas_sdot(K, rowA(i), 1, colB(j), ldb);
+        phiC(i,j) *= alpha;
     }
 }
 ```
 
 - Inside the inside for loop, the line that is being executed contains 3 floating point operations which is being repeated K times.
-- The line just outside the inner for loop is one floating point instruction
+- The line just below this is one floating point instruction
 - Both these instructions above are repeated $M*N$ times, therefore the total number of floating point operations will be $M*N*(3*K + 1)$
 
 $$
@@ -1151,8 +1185,51 @@ $$
 
 Using the data for M = 2000, K = 2200, N = 2400
 
-|                  | sGEMM | dGEMM |
-| ---------------- | ----- | ----- |
-| Baseline GFlops  |       |       |
-| Optimized GFlops |       |       |
+|                  | sGEMM    | dGEMM   |
+| ---------------- | -------- | ------- |
+| Baseline GFlops  | 0.6769   | 0.5688  |
+| Optimized GFlops | 172.4249 | 79.9891 |
+
+#### Memory Bandwidth
+
+$$
+\text{Memory Bandwidth} = \frac{\text{Number of bytes accessed}}{\text{time}}
+$$
+
+1. sGEMM
+   $$
+   \text{Memory Bandwidth} = \frac{4(MN + MK + NK)}{\text{Time}}
+   $$
+
+2. dGEMM
+   $$
+   \text{Memory Bandwidth} = \frac{8(MN + MK + NK)}{\text{Time}}
+   $$
+   
+
+Using the data for M = 2000, K = 2200, N = 2400
+
+| Function | Memory Bandwidth (GB/s) |
+| -------- | ----------------------- |
+| sGEMV    | 0.315193                |
+| dGEMV    | 0.292441                |
+
+#### Operational Intensity
+
+$$
+OI = \frac{\text{number of operations}}{\text{number of bytes}}
+$$
+
+1. sGEMM
+   $$
+   OI = \frac{MN(3K+1)}{4(MN + MK + NK)}
+   $$
+   
+
+2. dGEMM
+   $$
+   OI = \frac{MN(3K+1)}{8(MN + MK + NK)}**
+   $$
+
+#### Is the Process CPU Bound or Memory Bound?
 

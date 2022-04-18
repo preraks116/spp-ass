@@ -44,6 +44,7 @@ void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
         for(int j = 0; j < N; j++)
         {
             phiC(i,j) += cblas_sdot(K, rowA(i), 1, colB(j), ldb);
+            phiC(i,j) *= alpha;
         }
     }
 }
