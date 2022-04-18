@@ -4,6 +4,8 @@
 
 ## 2020111013
 
+# Know Your Computer
+
 ### 1. 
 
 Command used in manjaro `cat /proc/cpuinfo`
@@ -50,8 +52,6 @@ Loops: 1000000, Iterations: 1, Duration: 15 sec.
 C Converted Double Precision Whetstones: 6666.7 MIPS
 ```
 
-**Tentatively remove second one hehe uwu**
-
 Command
 ```
 ./whetstone 10000000
@@ -71,6 +71,8 @@ bash compile_linux_gcc.sh
 The output is stored in `flops_benchmark_output.txt`
 
 #### Writing Benchmark to calculate FLOPS
+
+#### Approach 1
 
 To measure FLOPS we first need code that performs floating point operations, and measure its execution time 
 
@@ -104,6 +106,73 @@ FLOPS: 3.929034 GFLOPS
 As we can see, this benchmark is heavily unoptimized for the following reasons
 - there is kind of parralelism being used
 - This can be made efficient by using parallelization using OpenMP or vectorization.
+
+#### Approach 2: Vectorization
+
+We can add the -O3 flag during compilation to vectorize our code, which speeds up the execution time.
+
+**Flags**: `-g -O3 -lm`
+
+Command
+
+```
+make
+./benchmark
+```
+
+Output
+
+```
+time: 20.139000 ms
+FLOPS: 0.993098 GFLOPS
+```
+
+#### Approach 3: Parallelization
+
+We can optimize the following code even more by parallelizing it. Since these are very simple, and we are just checking FLOPS and not worrying about accuracy of the result, we can simply ask the compiler to ignore loop dependencies entirely.
+
+**Flags**: `-g -O3 -mfma -fopenmp`
+
+```
+#pragma omp parallel for
+for (int i = 0; i < 10000000; i++) {
+	x = x + y;
+	y = x * y;
+}
+```
+
+Output
+
+```
+time: 3.535000 ms
+FLOPS: 22.657709 GFLOPS
+```
+
+The FLOPS that we are getting in this still very less, most probably because each iteration of the loop is dependent on the previous one and each iteration is writing to the same location.
+
+#### Approach 4: Using vectors
+
+Instead of using variables, we can use arrays to perform floating point operations on. The function is defined as follows:
+
+```
+    #pragma omp parallel for
+    for (long i = 0; i < 10000000; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            Y[j] = a * X[j] + Y[j];
+        }
+    }
+```
+
+Output
+
+```
+time: 108.014000 ms
+FLOPS: 185.161183 GFLOPS
+```
+
+As we can see, using this method we are getting a significant increase in GFlops, which is a speedup of approximately 30.5 from the previous approach 
 
 ### 3.
 <!-- 
@@ -206,6 +275,70 @@ Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 ```
 Therefore, main memory bandwidth using the stream benchmark is coming around 25-28 GB/s
+
+To write our own memory benchmark, we have to perform memory accesses in a loop and calculate the number of bytes that are accessed in the time that it takes to execute the function.
+
+#### Approach 1
+
+Function
+
+```
+    for(int i = 0; i < 10000000; i++)
+    {
+        sum += X[i] - Y[i];
+    }
+```
+
+Output
+
+```
+time: 24.430000 ms
+sum: -118.511756
+Memory Bandwidth: 6.549325
+```
+
+The number of memory accesses would be $8*\text{vector-length}*2$
+
+But this is still unoptimized as this does not make use of vectorization or parallelization.
+
+#### Approach 2: Vectorization
+
+**Flags**: `-g -O3 -lm` 
+
+Output
+
+```
+time: 12.633000 ms
+sum: -118.511756
+Memory Bandwidth: 12.665242
+```
+
+Using this approach, the amount memory bandwidth that we get has almost doubled, and the execution time has halved, giving us a speedup of approximately 2x.
+
+#### Approach 3: Parallelization
+
+Function
+
+```
+    #pragma omp parallel for
+    for(int i = 0; i < 10000000; i++)
+    {
+        sum += X[i] - Y[i];
+    }
+```
+
+**Flags**: `-g -O3 -lm -mfma -fopenmp`
+
+Output
+
+```
+time: 7.127000 ms
+sum: 430.665919
+Memory Bandwidth: 22.449839
+```
+
+As we can see, using parallelization, we are getting double the bandwidth from the previous appraoch and an overall speedup of approximately 4x from the initial approach
+
 ### 4. 
 
 Secondary Storage Device: HDD
@@ -220,7 +353,7 @@ Secondary Storage Device: HDD
 - ADA Peak FLOPs: 70.66 TFLOPS
 - Abacus Peak FLOPs: 14 TFLOPS
 
-## BLAS Problems
+# BLAS Problems
 
 ### BLAS Level 1
 
@@ -511,7 +644,7 @@ $$
 
 #### **Is the problem memory bound or compute bound?**
 
-
+The process is CPU bound as the memory bandwidth that we are getting is much lesser than the achieveable bandwidth
 
 #### Memory BandWidth
 
@@ -899,7 +1032,7 @@ Using the data for matrix dimensions 10000*12000
 
 #### Is the Process CPU Bound or Memory Bound?
 
-
+The process is CPU bound as the memory bandwidth that we are getting is much lesser than the achieveable bandwidth
 
 ### BLAS Level 3
 
@@ -925,7 +1058,7 @@ make
 
 | M    | K    | N    | sGEMM        | dGEMM        |
 | ---- | ---- | ---- | ------------ | ------------ |
-| 20   | 400  | 600  | 38.059000    | 53.497000    |
+| 200  | 400  | 600  | 38.059000    | 53.497000    |
 | 600  | 800  | 1000 | 238.617000   | 357.391000   |
 | 1000 | 1200 | 1400 | 992.434000   | 1762.003000  |
 | 1400 | 1600 | 1800 | 9095.817000  | 11328.725000 |
@@ -1225,7 +1358,6 @@ $$
    OI = \frac{MN(3K+1)}{4(MN + MK + NK)}
    $$
    
-
 2. dGEMM
    $$
    OI = \frac{MN(3K+1)}{8(MN + MK + NK)}**
@@ -1233,3 +1365,156 @@ $$
 
 #### Is the Process CPU Bound or Memory Bound?
 
+The process is CPU bound as the memory bandwidth that we are getting is much lesser than the achieveable bandwidth
+
+# Stencil Computation
+
+Here benchmarking is done by varying the size of the stencil from 3 to 83 with steps of 20 in between. Three 2 optimizations are done namely
+
+- Vectorization using -O3
+- Parallelization using OpenMP
+
+The parallelization is done as follows
+
+```c
+#pragma omp parallel for
+    for (int i = 0; i < dimY; i++)
+    {
+        for (int j = 0; j < dimX; j++)
+        {
+            Y[i * dimX + j] = 0.0;
+            for (int kx = 0; kx < k && i + kx < dimY; kx++)
+            {
+                float temp = 0.0;
+                // #pragma omp parallel for reduction(+:temp)  
+                for (int ky = 0; ky < k && j + ky < dimX; ky++)
+                {
+                    temp += X[(i + kx) * dimX + (j + ky)] * S[kx * k + ky];
+                }
+                Y[i * dimX + j] += temp;
+            }
+        }
+    }
+}
+```
+
+### HD
+
+#### Compiler: gcc
+
+**Flags for vectorization**: `-g -O3 -lm -fopenmp  -c`
+
+**Flags for parallelization**: `-g -O3 -lm -c`
+
+The format in each cell is (Execution Time(ms), GFlops, Memory Bandwidth)
+
+| Stencil Size | Without Optimizations           | Vectorization                   | Parallelization                 |
+| ------------ | ------------------------------- | ------------------------------- | ------------------------------- |
+| 3            | 93.878000,0.397588, 0.176706    | 23.635000,1.579217, 0.701874    | 4.608000,8.100000, 3.600000     |
+| 23           | 4378.076000,0.501103, 0.003789  | 1110.388000,1.975768, 0.014940  | 122.757000,17.871639, 0.135135  |
+| 43           | 15249.852000,0.502836, 0.001088 | 3795.378000,2.020398, 0.004371  | 499.319000,15.357262, 0.033223  |
+| 63           | 33102.726000,0.497247, 0.000501 | 7936.417000,2.074014, 0.002090  | 956.817000,17.203119, 0.017337  |
+| 83           | 55492.324000,0.514847, 0.000299 | 13541.367000,2.109836, 0.001225 | 1789.617000,15.964344, 0.009269 |
+
+#### Compiler: icc
+
+**Flags for vectorization**: `-g -axCORE-AVX2 -O3`
+
+**Flags for parallelization**: `-g -axCORE-AVX2 -O3 -qopenmp`
+
+The format in each cell is (Execution Time(ms), GFlops, Memory Bandwidth)
+
+| Stencil Size | Without Optimizations           | Vectorization                   | Parallelization                |
+| ------------ | ------------------------------- | ------------------------------- | ------------------------------ |
+| 3            | 26.411000,1.413229, 0.628102    | 23.276000,1.603574, 0.712700    | 8.763000,4.259363, 1.893050    |
+| 23           | 862.628000,2.543239, 0.019231   | 791.390000,2.772171, 0.020962   | 225.761000,9.717661, 0.073479  |
+| 43           | 2860.697000,2.680526, 0.005799  | 2811.835000,2.727106, 0.005900  | 750.108000,10.222758, 0.022115 |
+| 63           | 6420.337000,2.563765, 0.002584  | 6143.960000,2.679092, 0.002700  | 1665.595000,9.882497, 0.009960 |
+| 83           | 12027.179000,2.375458, 0.001379 | 11989.756000,2.382873, 0.001384 | 2877.264000,9.929593, 0.005765 |
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_220620.png)
+
+### UHD
+
+#### Compiler: gcc
+
+**Flags for vectorization**: `-g -O3 -lm -fopenmp  -c`
+
+**Flags for parallelization**: `-g -O3 -lm -c`
+
+The format in each cell is (Execution Time(ms), GFlops, Memory Bandwidth)
+
+| Stencil Size | Without Optimizations            | Vectorization                   | Parallelization                 |
+| ------------ | -------------------------------- | ------------------------------- | ------------------------------- |
+| 3            | 350.949000,0.425416, 0.189074    | 64.631000,2.310025, 1.026678    | 18.118000,8.240380, 3.662391    |
+| 23           | 13243.805000,0.662610, 0.005010  | 2442.030000,3.593517, 0.027172  | 499.481000,17.569187, 0.132848  |
+| 43           | 44057.716000,0.696193, 0.001506  | 10637.017000,2.883580, 0.006238 | 2032.337000,15.092325, 0.032650 |
+| 63           | 94987.475000,0.693154, 0.000699  | 21839.558000,3.014756, 0.003038 | 4025.289000,16.356825, 0.016485 |
+| 83           | 168034.916000,0.680098, 0.000395 | 42745.312000,2.673515, 0.001552 | 7533.248000,15.170116, 0.008808 |
+
+#### Compiler: icc
+
+**Flags for vectorization**: `-g -axCORE-AVX2 -O3`
+
+**Flags for parallelization**: `-g -axCORE-AVX2 -O3 -qopenmp`
+
+The format in each cell is (Execution Time(ms), GFlops, Memory Bandwidth)
+
+| Stencil Size | Without Optimizations           | Vectorization                   | Parallelization                 |
+| ------------ | ------------------------------- | ------------------------------- | ------------------------------- |
+| 3            | 121.918000,1.224587, 0.544261   | 103.103000,1.448059, 0.643582   | 31.414000,4.752633, 2.112281    |
+| 23           | 3242.232000,2.706615, 0.020466  | 3473.746000,2.526228, 0.019102  | 899.212000,9.759073, 0.073793   |
+| 43           | 11546.700000,2.656403, 0.005747 | 11816.069000,2.595846, 0.005616 | 3048.473000,10.061657, 0.021767 |
+| 63           | 25142.785000,2.618682, 0.002639 | 25954.868000,2.536748, 0.002557 | 6623.252000,9.940879, 0.010019  |
+| 83           | 49031.951000,2.330730, 0.001353 | 48800.378000,2.341790, 0.001360 | 11740.869000,9.733542, 0.00565  |
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_220710.png)
+
+#### GCC Performance 
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_220837.png)
+
+#### ICC Performance
+
+![img](file:///home/prerak/Pictures/Screenshot_20220418_220927.png)
+
+#### Operational Intensity
+
+For each pixel of the output, we have to perform $2*k^2$ operations per pixel 
+$$
+\text{Operational Intensity} = \frac{2*k^2*X*Y}{8*X*Y + 8*k^2}
+$$
+
+#### Baseline and Best Execution Time (in ms)
+
+The data for k = 83 is being used
+
+#### HD
+
+Baseline Execution Time: 55492.324000
+
+Best Execution Time: 1789.617000
+
+#### UHD
+
+Baseline Execution Time:   168034.916000
+
+Best Execution Time: 7533.248000
+
+#### Speedup
+
+#### HD
+
+$$
+\text{Speedup} = \frac{55492.324000}{1789.617000} = 31.0079
+$$
+
+#### UHD
+
+$$
+\text{Speedup} = \frac{168034.916000}{7533.248000} = 22.2467
+$$
+
+#### Is the Process CPU Bound or Memory Bound?
+
+The process is CPU bound as the memory bandwidth that we are getting is much lesser than the achieveable bandwidth
