@@ -68,10 +68,10 @@ omp_gcc_dgemv = [1.530000 ,4.771000  ,10.778000 ,17.777000 ,27.520000 ]
 # plt.legend()
 
 # plot omp_icc_sgemv, omp_icc_dgemv, omp_gcc_sgemv, omp_gcc_dgemv
-plt.plot(matrix_size, omp_icc_sgemv, "r-", label = "Parallelized ICC")
-plt.plot(matrix_size, omp_icc_dgemv, "r--", label = "Parallelized ICC")
-plt.plot(matrix_size, omp_gcc_sgemv, "b-", label = "Parallelized GCC")
-plt.plot(matrix_size, omp_gcc_dgemv, "b--", label = "Parallelized GCC")
+plt.plot(matrix_size, omp_icc_sgemv, "r-", label = "Parallelized ICC SGEMV")
+plt.plot(matrix_size, omp_icc_dgemv, "r--", label = "Parallelized ICC DGEMV")
+plt.plot(matrix_size, omp_gcc_sgemv, "b-", label = "Parallelized GCC SGEMV")
+plt.plot(matrix_size, omp_gcc_dgemv, "b--", label = "Parallelized GCC DGEMV")
 plt.legend()
 
 plt.show()
