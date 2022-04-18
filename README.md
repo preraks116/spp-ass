@@ -561,7 +561,19 @@ Assuming the vector to be a column vector, which makes it easier to write the fu
 Command
 
 ```
-cd blas-problems/q2
+cd blas-problems/q2/cblas_sgemv
+make
+./q2 1
+./q2 2
+./q2 3
+./q2 4
+./q2 5
+```
+
+and
+
+```
+cd blas-problems/q2/cblas_dgemv
 make
 ./q2 1
 ./q2 2
@@ -858,8 +870,6 @@ $$
    OI = \frac{M*(3N+1)}{8*(MN+M+N)}
    $$
 
-Using the data for matrix dimensions 10000*12000	
-
 #### Memory Bandwidth
 
 $$
@@ -889,39 +899,114 @@ Using the data for matrix dimensions 10000*12000
 
 #### BLAS
 
+Command
+
+```
+cd blas-problems/q3/xgemm
+make
+./q3 1
+./q3 2
+./q3 3
+./q3 4
+./q3 5
+
+```
+
 #### Approach 1: Without Optimizations
 
 #### Compiler: icc
 
-**Flags**:
-
 **Execution Time**:
 
+| M    | K    | N    | sGEMM        | dGEMM |
+| ---- | ---- | ---- | ------------ | ----- |
+| 20   | 400  | 600  | 38.059000    |       |
+| 600  | 800  | 1000 | 238.617000   |       |
+| 1000 | 1200 | 1400 | 992.434000   |       |
+| 1400 | 1600 | 1800 | 9095.817000  |       |
+| 2000 | 2200 | 2400 | 41747.513000 |       |
+
 **GFlops**:
+
+| M    | K    | N    | sGEMM    | dGEMM |
+| ---- | ---- | ---- | -------- | ----- |
+| 200  | 400  | 600  | 3.786752 |       |
+| 600  | 800  | 1000 | 6.037290 |       |
+| 1000 | 1200 | 1400 | 5.079834 |       |
+| 1400 | 1600 | 1800 | 1.330119 |       |
+| 2000 | 2200 | 2400 | 0.758962 |       |
 
 #### Compiler: gcc
 
-**Flags**:
-
 **Execution Time**:
 
+| M    | K    | N    | sGEMM        | dGEMM |
+| ---- | ---- | ---- | ------------ | ----- |
+| 200  | 400  | 600  | 118.037000   |       |
+| 600  | 800  | 1000 | 1287.008000  |       |
+| 1000 | 1200 | 1400 | 5529.920000  |       |
+| 1400 | 1600 | 1800 | 17294.369000 |       |
+| 2000 | 2200 | 2400 | 46805.713000 |       |
+
 **GFlops**:
+
+| M    | K    | N    | sGEMM    | dGEMM |
+| ---- | ---- | ---- | -------- | ----- |
+| 200  | 400  | 600  | 1.220973 |       |
+| 600  | 800  | 1000 | 1.119340 |       |
+| 1000 | 1200 | 1400 | 0.6078   |       |
+| 1400 | 1600 | 1800 | 0.6995   |       |
+| 2000 | 2200 | 2400 | 0.6769   |       |
 
 #### Approach 2: Vectorization using -O3
 
-**Flags**:
+#### Compiler: icc
+
+**Flags**: `-g -axCORE-AVX2 -O3 -c`
 
 **Execution Time**:
 
+| M    | K    | N    | sGEMM        | dGEMM |
+| ---- | ---- | ---- | ------------ | ----- |
+| 200  | 400  | 600  | 37.538000    |       |
+| 600  | 800  | 1000 | 240.426000   |       |
+| 1000 | 1200 | 1400 | 1021.825000  |       |
+| 1400 | 1600 | 1800 | 9269.478000  |       |
+| 2000 | 2200 | 2400 | 41260.255000 |       |
+
 **GFlops**:
+
+| M    | K    | N    | sGEMM    | dGEMM |
+| ---- | ---- | ---- | -------- | ----- |
+| 200  | 400  | 600  | 3.839309 |       |
+| 600  | 800  | 1000 | 5.991865 |       |
+| 1000 | 1200 | 1400 | 4.93372  |       |
+| 1400 | 1600 | 1800 | 1.305199 |       |
+| 2000 | 2200 | 2400 | 0.76793  |       |
 
 #### Compiler: gcc
 
-**Flags**:
+**Flags**: `-g -O3 -lm -c`
 
 **Execution Time**:
 
+| M    | K    | N    | sGEMM        | dGEMM |
+| ---- | ---- | ---- | ------------ | ----- |
+| 200  | 400  | 600  | 71.580000    |       |
+| 600  | 800  | 1000 | 482.551000   |       |
+| 1000 | 1200 | 1400 | 1916.106000  |       |
+| 1400 | 1600 | 1800 | 9020.441000  |       |
+| 2000 | 2200 | 2400 | 39199.686000 |       |
+
 **GFlops**:
+
+| M    | K    | N    | sGEMM    | dGEMM |
+| ---- | ---- | ---- | -------- | ----- |
+| 200  | 400  | 600  | 2.013412 |       |
+| 600  | 800  | 1000 | 2.985384 |       |
+| 1000 | 1200 | 1400 | 2.631065 |       |
+| 1400 | 1600 | 1800 | 1.341233 |       |
+| 2000 | 2200 | 2400 | 0.808292 |       |
 
 #### Approach 3: Parallelization using OpenMP
 
@@ -929,7 +1014,23 @@ Using the data for matrix dimensions 10000*12000
 
 **Execution Time**:
 
+| M    | K    | N    | sGEMM | dGEMM |
+| ---- | ---- | ---- | ----- | ----- |
+| 200  | 400  | 600  |       |       |
+| 600  | 800  | 1000 |       |       |
+| 1000 | 1200 | 1400 |       |       |
+| 1400 | 1600 | 1800 |       |       |
+| 2000 | 2200 | 2400 |       |       |
+
 **GFlops**:
+
+| M    | K    | N    | sGEMM | dGEMM |
+| ---- | ---- | ---- | ----- | ----- |
+| 200  | 400  | 600  |       |       |
+| 600  | 800  | 1000 |       |       |
+| 1000 | 1200 | 1400 |       |       |
+| 1400 | 1600 | 1800 |       |       |
+| 2000 | 2200 | 2400 |       |       |
 
 #### Compiler: gcc
 
@@ -937,9 +1038,91 @@ Using the data for matrix dimensions 10000*12000
 
 **Execution Time**:
 
+| M    | K    | N    | sGEMM | dGEMM |
+| ---- | ---- | ---- | ----- | ----- |
+| 200  | 400  | 600  |       |       |
+| 600  | 800  | 1000 |       |       |
+| 1000 | 1200 | 1400 |       |       |
+| 1400 | 1600 | 1800 |       |       |
+| 2000 | 2200 | 2400 |       |       |
+
 **GFlops**:
 
+| M    | K    | N    | sGEMM | dGEMM |
+| ---- | ---- | ---- | ----- | ----- |
+| 200  | 400  | 600  |       |       |
+| 600  | 800  | 1000 |       |       |
+| 1000 | 1200 | 1400 |       |       |
+| 1400 | 1600 | 1800 |       |       |
+| 2000 | 2200 | 2400 |       |       |
 
+#### BLIS
 
+Command
 
+```
+cd blas-problems/blis/q3
+make
+./q3.x
+```
+
+**Execution Time**:
+
+| M    | K    | N    | sGEMM      | dGEMM      |
+| ---- | ---- | ---- | ---------- | ---------- |
+| 200  | 400  | 600  | 4.046000   | 9.011000   |
+| 600  | 800  | 1000 | 11.519000  | 20.775000  |
+| 1000 | 1200 | 1400 | 31.337000  | 60.834000  |
+| 1400 | 1600 | 1800 | 75.169000  | 147.386000 |
+| 2000 | 2200 | 2400 | 183.760000 | 396.114000 |
+
+**GFlops**:
+
+| M    | K    | N    | sGEMM | dGEMM |
+| ---- | ---- | ---- | ----- | ----- |
+| 200  | 400  | 600  |       |       |
+| 600  | 800  | 1000 |       |       |
+| 1000 | 1200 | 1400 |       |       |
+| 1400 | 1600 | 1800 |       |       |
+| 2000 | 2200 | 2400 |       |       |
+
+#### Baseline and Best Execution Times
+
+Using the data for M = 2000, K = 2200, N = 2400
+
+| Function | Baseline Execution Time | Best Execution Time |
+| -------- | ----------------------- | ------------------- |
+| sGEMM    |                         |                     |
+| dGEMM    |                         |                     |
+
+#### Speedup
+
+#### Baseline and Optimized GFlops
+
+For the following function
+
+```c
+    for(int i = 0; i < M; i++)
+    {
+        for(int j = 0; j < N; j++)
+        {
+            phiC(i,j) += cblas_sdot(K, rowA(i), 1, colB(j), ldb);
+        }
+    }
+```
+
+- Inside the inside for loop, the line that is being executed contains 3 floating point operations which is being repeated K times.
+- The line just outside the inner for loop is one floating point instruction
+- Both these instructions above are repeated $M*N$ times, therefore the total number of floating point operations will be $M*N*(3*K + 1)$
+
+$$
+\text{GFlops} = \frac{MN(3K+1)}{\text{Time(in ms)}*10^6}
+$$
+
+Using the data for M = 2000, K = 2200, N = 2400
+
+|                  | sGEMM | dGEMM |
+| ---------------- | ----- | ----- |
+| Baseline GFlops  |       |       |
+| Optimized GFlops |       |       |
 
