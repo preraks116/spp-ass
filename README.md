@@ -1,9 +1,4 @@
-## Software Programming for Performance Assignment
-
-## Prerak Srivastava
-
-## 2020111013
-
+## Software Programming for Performance
 # Know Your Computer
 
 ### 1. 
